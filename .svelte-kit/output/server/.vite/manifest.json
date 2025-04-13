@@ -1,0 +1,122 @@
+{
+  ".svelte-kit/generated/server/internal.js": {
+    "file": "internal.js",
+    "name": "internal",
+    "src": ".svelte-kit/generated/server/internal.js",
+    "isEntry": true,
+    "imports": [
+      "_internal.js"
+    ]
+  },
+  "_equality.js": {
+    "file": "chunks/equality.js",
+    "name": "equality"
+  },
+  "_escaping.js": {
+    "file": "chunks/escaping.js",
+    "name": "escaping"
+  },
+  "_exports.js": {
+    "file": "chunks/exports.js",
+    "name": "exports",
+    "imports": [
+      "_equality.js"
+    ]
+  },
+  "_index.js": {
+    "file": "chunks/index.js",
+    "name": "index"
+  },
+  "_index2.js": {
+    "file": "chunks/index2.js",
+    "name": "index"
+  },
+  "_internal.js": {
+    "file": "chunks/internal.js",
+    "name": "internal",
+    "imports": [
+      "_equality.js",
+      "_index2.js"
+    ]
+  },
+  "_utils.js": {
+    "file": "chunks/utils.js",
+    "name": "utils",
+    "imports": [
+      "_escaping.js"
+    ]
+  },
+  "node_modules/.pnpm/@sveltejs+kit@2.20.5_@sveltejs+vite-plugin-svelte@5.0.3_svelte@5.26.2_vite@6.2.6__svelte@5.26.2_vite@6.2.6/node_modules/@sveltejs/kit/src/runtime/components/svelte-5/error.svelte": {
+    "file": "entries/fallbacks/error.svelte.js",
+    "name": "entries/fallbacks/error.svelte",
+    "src": "node_modules/.pnpm/@sveltejs+kit@2.20.5_@sveltejs+vite-plugin-svelte@5.0.3_svelte@5.26.2_vite@6.2.6__svelte@5.26.2_vite@6.2.6/node_modules/@sveltejs/kit/src/runtime/components/svelte-5/error.svelte",
+    "isEntry": true,
+    "imports": [
+      "_escaping.js",
+      "_index2.js",
+      "_equality.js",
+      "_exports.js"
+    ]
+  },
+  "node_modules/.pnpm/@sveltejs+kit@2.20.5_@sveltejs+vite-plugin-svelte@5.0.3_svelte@5.26.2_vite@6.2.6__svelte@5.26.2_vite@6.2.6/node_modules/@sveltejs/kit/src/runtime/components/svelte-5/layout.svelte": {
+    "file": "entries/fallbacks/layout.svelte.js",
+    "name": "entries/fallbacks/layout.svelte",
+    "src": "node_modules/.pnpm/@sveltejs+kit@2.20.5_@sveltejs+vite-plugin-svelte@5.0.3_svelte@5.26.2_vite@6.2.6__svelte@5.26.2_vite@6.2.6/node_modules/@sveltejs/kit/src/runtime/components/svelte-5/layout.svelte",
+    "isEntry": true
+  },
+  "node_modules/.pnpm/@sveltejs+kit@2.20.5_@sveltejs+vite-plugin-svelte@5.0.3_svelte@5.26.2_vite@6.2.6__svelte@5.26.2_vite@6.2.6/node_modules/@sveltejs/kit/src/runtime/server/index.js": {
+    "file": "index.js",
+    "name": "index",
+    "src": "node_modules/.pnpm/@sveltejs+kit@2.20.5_@sveltejs+vite-plugin-svelte@5.0.3_svelte@5.26.2_vite@6.2.6__svelte@5.26.2_vite@6.2.6/node_modules/@sveltejs/kit/src/runtime/server/index.js",
+    "isEntry": true,
+    "imports": [
+      "_internal.js",
+      "_index.js",
+      "_exports.js"
+    ]
+  },
+  "src/routes/+page.svelte": {
+    "file": "entries/pages/_page.svelte.js",
+    "name": "entries/pages/_page.svelte",
+    "src": "src/routes/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index2.js",
+      "_utils.js",
+      "src/routes/+page.ts",
+      "_escaping.js"
+    ]
+  },
+  "src/routes/+page.ts": {
+    "file": "entries/pages/_page.ts.js",
+    "name": "entries/pages/_page.ts",
+    "src": "src/routes/+page.ts",
+    "isEntry": true
+  },
+  "src/routes/pokemon/[name]/+page.server.ts": {
+    "file": "entries/pages/pokemon/_name_/_page.server.ts.js",
+    "name": "entries/pages/pokemon/_name_/_page.server.ts",
+    "src": "src/routes/pokemon/[name]/+page.server.ts",
+    "isEntry": true
+  },
+  "src/routes/pokemon/[name]/+page.svelte": {
+    "file": "entries/pages/pokemon/_name_/_page.svelte.js",
+    "name": "entries/pages/pokemon/_name_/_page.svelte",
+    "src": "src/routes/pokemon/[name]/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index2.js",
+      "_utils.js",
+      "_escaping.js"
+    ]
+  },
+  "src/routes/pokemon/[name]/+page.ts": {
+    "file": "entries/pages/pokemon/_name_/_page.ts.js",
+    "name": "entries/pages/pokemon/_name_/_page.ts",
+    "src": "src/routes/pokemon/[name]/+page.ts",
+    "isEntry": true,
+    "imports": [
+      "_index.js"
+    ]
+  }
+}
