@@ -1,3 +1,5 @@
+import type { PageServerLoad } from './$types';
+
 type Abilities = {
 	is_hidden: boolean;
 	slot: number;
@@ -17,6 +19,44 @@ type Sprites = {
 	};
 };
 
+type PokemonType = {
+	slot: number;
+	type: {
+		name: string;
+		url: string;
+	};
+};
+
+type VersionGroupDetails = {
+	level_learned_at: number;
+	move_learn_method: {
+		name: string;
+		url: string;
+	};
+	version_group: {
+		name: string;
+		url: string;
+	};
+};
+
+type Moves = {
+	move: {
+		name: string;
+		url: string;
+	};
+	version_group_details: VersionGroupDetails[];
+};
+
+export type Move = {
+	id: number;
+	name: string;
+	pp: number;
+	power: number;
+	type: {
+		name: string;
+	};
+};
+
 export type Pokemon = {
 	id: number;
 	name: string;
@@ -24,11 +64,22 @@ export type Pokemon = {
 	height: number;
 	abilities: Abilities[];
 	sprites: Sprites;
+	types: PokemonType[];
+	moves: Moves[];
 };
 
-export const load = async ({ fetch, params }) => {
+export const load: PageServerLoad = async ({ fetch, params }) => {
 	const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${params.name}`);
 
 	const data = (await res.json()) as Pokemon;
-	return { data };
+
+	const moveDetails = await Promise.all(
+		data.moves.map(async (move) => {
+			const res = await fetch(move.move.url);
+			const moveData = await res.json();
+			return moveData as Move;
+		})
+	);
+
+	return { data, moveDetails };
 };

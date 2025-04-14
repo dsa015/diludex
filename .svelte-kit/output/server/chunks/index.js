@@ -1,96 +1,163 @@
-class HttpError {
-  /**
-   * @param {number} status
-   * @param {{message: string} extends App.Error ? (App.Error | string | undefined) : App.Error} body
-   */
-  constructor(status, body) {
-    this.status = status;
-    if (typeof body === "string") {
-      this.body = { message: body };
-    } else if (body) {
-      this.body = body;
-    } else {
-      this.body = { message: `Error: ${status}` };
+const HYDRATION_START = "[";
+const HYDRATION_END = "]";
+const HYDRATION_ERROR = {};
+const UNINITIALIZED = Symbol();
+function lifecycle_outside_component(name) {
+  {
+    throw new Error(`https://svelte.dev/e/lifecycle_outside_component`);
+  }
+}
+const ATTR_REGEX = /[&"<]/g;
+const CONTENT_REGEX = /[&<]/g;
+function escape_html(value, is_attr) {
+  const str = String(value ?? "");
+  const pattern = is_attr ? ATTR_REGEX : CONTENT_REGEX;
+  pattern.lastIndex = 0;
+  let escaped = "";
+  let last = 0;
+  while (pattern.test(str)) {
+    const i = pattern.lastIndex - 1;
+    const ch = str[i];
+    escaped += str.substring(last, i) + (ch === "&" ? "&amp;" : ch === '"' ? "&quot;" : "&lt;");
+    last = i + 1;
+  }
+  return escaped + str.substring(last);
+}
+const replacements = {
+  translate: /* @__PURE__ */ new Map([
+    [true, "yes"],
+    [false, "no"]
+  ])
+};
+function attr(name, value, is_boolean = false) {
+  if (value == null || !value && is_boolean) return "";
+  const normalized = name in replacements && replacements[name].get(value) || value;
+  const assignment = is_boolean ? "" : `="${escape_html(normalized, true)}"`;
+  return ` ${name}${assignment}`;
+}
+function to_style(value, styles) {
+  return value == null ? null : String(value);
+}
+var current_component = null;
+function getContext(key) {
+  const context_map = get_or_init_context_map();
+  const result = (
+    /** @type {T} */
+    context_map.get(key)
+  );
+  return result;
+}
+function setContext(key, context) {
+  get_or_init_context_map().set(key, context);
+  return context;
+}
+function get_or_init_context_map(name) {
+  if (current_component === null) {
+    lifecycle_outside_component();
+  }
+  return current_component.c ??= new Map(get_parent_context(current_component) || void 0);
+}
+function push(fn) {
+  current_component = { p: current_component, c: null, d: null };
+}
+function pop() {
+  var component = (
+    /** @type {Component} */
+    current_component
+  );
+  var ondestroy = component.d;
+  if (ondestroy) {
+    on_destroy.push(...ondestroy);
+  }
+  current_component = component.p;
+}
+function get_parent_context(component_context) {
+  let parent = component_context.p;
+  while (parent !== null) {
+    const context_map = parent.c;
+    if (context_map !== null) {
+      return context_map;
     }
+    parent = parent.p;
   }
-  toString() {
-    return JSON.stringify(this.body);
+  return null;
+}
+const BLOCK_OPEN = `<!--${HYDRATION_START}-->`;
+const BLOCK_CLOSE = `<!--${HYDRATION_END}-->`;
+class Payload {
+  /** @type {Set<{ hash: string; code: string }>} */
+  css = /* @__PURE__ */ new Set();
+  out = "";
+  uid = () => "";
+  head = {
+    /** @type {Set<{ hash: string; code: string }>} */
+    css: /* @__PURE__ */ new Set(),
+    title: "",
+    out: "",
+    uid: () => ""
+  };
+  constructor(id_prefix = "") {
+    this.uid = props_id_generator(id_prefix);
+    this.head.uid = this.uid;
   }
 }
-class Redirect {
-  /**
-   * @param {300 | 301 | 302 | 303 | 304 | 305 | 306 | 307 | 308} status
-   * @param {string} location
-   */
-  constructor(status, location) {
-    this.status = status;
-    this.location = location;
-  }
+function props_id_generator(prefix) {
+  let uid = 1;
+  return () => `${prefix}s${uid++}`;
 }
-class SvelteKitError extends Error {
-  /**
-   * @param {number} status
-   * @param {string} text
-   * @param {string} message
-   */
-  constructor(status, text2, message) {
-    super(message);
-    this.status = status;
-    this.text = text2;
+let on_destroy = [];
+function render(component, options = {}) {
+  const payload = new Payload(options.idPrefix ? options.idPrefix + "-" : "");
+  const prev_on_destroy = on_destroy;
+  on_destroy = [];
+  payload.out += BLOCK_OPEN;
+  if (options.context) {
+    push();
+    current_component.c = options.context;
   }
+  component(payload, options.props ?? {}, {}, {});
+  if (options.context) {
+    pop();
+  }
+  payload.out += BLOCK_CLOSE;
+  for (const cleanup of on_destroy) cleanup();
+  on_destroy = prev_on_destroy;
+  let head = payload.head.out + payload.head.title;
+  for (const { hash, code } of payload.css) {
+    head += `<style id="${hash}">${code}</style>`;
+  }
+  return {
+    head,
+    html: payload.out,
+    body: payload.out
+  };
 }
-class ActionFailure {
-  /**
-   * @param {number} status
-   * @param {T} data
-   */
-  constructor(status, data) {
-    this.status = status;
-    this.data = data;
-  }
+function stringify(value) {
+  return typeof value === "string" ? value : value == null ? "" : value + "";
 }
-function error(status, body) {
-  if (isNaN(status) || status < 400 || status > 599) {
-    throw new Error(`HTTP error status codes must be between 400 and 599 — ${status} is invalid`);
-  }
-  throw new HttpError(status, body);
+function attr_style(value, directives) {
+  var result = to_style(value);
+  return result ? ` style="${escape_html(result, true)}"` : "";
 }
-function json(data, init) {
-  const body = JSON.stringify(data);
-  const headers = new Headers(init?.headers);
-  if (!headers.has("content-length")) {
-    headers.set("content-length", encoder.encode(body).byteLength.toString());
+function ensure_array_like(array_like_or_iterator) {
+  if (array_like_or_iterator) {
+    return array_like_or_iterator.length !== void 0 ? array_like_or_iterator : Array.from(array_like_or_iterator);
   }
-  if (!headers.has("content-type")) {
-    headers.set("content-type", "application/json");
-  }
-  return new Response(body, {
-    ...init,
-    headers
-  });
-}
-const encoder = new TextEncoder();
-function text(body, init) {
-  const headers = new Headers(init?.headers);
-  if (!headers.has("content-length")) {
-    const encoded = encoder.encode(body);
-    headers.set("content-length", encoded.byteLength.toString());
-    return new Response(encoded, {
-      ...init,
-      headers
-    });
-  }
-  return new Response(body, {
-    ...init,
-    headers
-  });
+  return [];
 }
 export {
-  ActionFailure as A,
-  HttpError as H,
-  Redirect as R,
-  SvelteKitError as S,
-  error as e,
-  json as j,
-  text as t
+  HYDRATION_ERROR as H,
+  UNINITIALIZED as U,
+  HYDRATION_START as a,
+  HYDRATION_END as b,
+  pop as c,
+  ensure_array_like as d,
+  escape_html as e,
+  attr as f,
+  getContext as g,
+  stringify as h,
+  attr_style as i,
+  push as p,
+  render as r,
+  setContext as s
 };
