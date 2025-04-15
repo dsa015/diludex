@@ -56,6 +56,10 @@
       "_exports.js"
     ]
   },
+  "src/lib/images/stellar.png": {
+    "file": "_app/immutable/assets/stellar.DHYnctz7.png",
+    "src": "src/lib/images/stellar.png"
+  },
   "src/params/name.ts": {
     "file": "entries/matchers/name.js",
     "name": "entries/matchers/name",
@@ -106,7 +110,7 @@
       "_utils.js"
     ],
     "css": [
-      "_app/immutable/assets/_page.BjR2eXEI.css"
+      "_app/immutable/assets/_page.BT20z7q8.css"
     ]
   }
 }

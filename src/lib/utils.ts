@@ -1,6 +1,12 @@
 import type { Pokemons } from '../routes/+page.server';
 
 export const toUpperCase = (str: string) => {
+	if (str.includes('-')) {
+		const strArray = str.split('-');
+		const strUpper = strArray.map((s) => s.charAt(0).toUpperCase() + s.slice(1));
+		return strUpper.join(' ');
+	}
+
 	return str.charAt(0).toUpperCase() + str.slice(1);
 };
 

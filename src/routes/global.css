@@ -1,4 +1,5 @@
 body {
 	margin: 0;
-	padding: 0;
+	padding-inline: 7rem;
+	font-family: sans-serif;
 }

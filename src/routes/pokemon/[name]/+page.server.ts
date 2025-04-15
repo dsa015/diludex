@@ -9,11 +9,25 @@ type Abilities = {
 	};
 };
 
+type AbilityDetails = {
+	name: string;
+	effect_entries: {
+		effect: string;
+		language: {
+			name: string;
+			url: string;
+		};
+	}[];
+};
+
 type Sprites = {
 	front_default: string;
 	front_shiny: string;
 	other: {
 		dream_world: {
+			front_default: string;
+		};
+		'official-artwork': {
 			front_default: string;
 		};
 	};
@@ -50,11 +64,23 @@ type Moves = {
 export type Move = {
 	id: number;
 	name: string;
+	accuracy: number;
+	damage_class: {
+		name: string;
+		url: string;
+	};
 	pp: number;
 	power: number;
 	type: {
 		name: string;
 	};
+	names: {
+		name: string;
+		language: {
+			name: string;
+			url: string;
+		};
+	}[];
 };
 
 export type Pokemon = {
@@ -68,10 +94,25 @@ export type Pokemon = {
 	moves: Moves[];
 };
 
+export type Species = {
+	flavor_text_entries: {
+		flavor_text: string;
+		language: {
+			name: string;
+			url: string;
+		};
+	}[];
+	color: {
+		name: string;
+	};
+};
+
 export const load: PageServerLoad = async ({ fetch, params }) => {
 	const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${params.name}`);
+	const species = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${params.name}`);
 
 	const data = (await res.json()) as Pokemon;
+	const speciesData = (await species.json()) as Species;
 
 	const moveDetails = await Promise.all(
 		data.moves.map(async (move) => {
@@ -81,5 +122,13 @@ export const load: PageServerLoad = async ({ fetch, params }) => {
 		})
 	);
 
-	return { data, moveDetails };
+	const abilityDetails = await Promise.all(
+		data.abilities.map(async (ability) => {
+			const res = await fetch(ability.ability.url);
+			const abilityData = await res.json();
+			return abilityData as AbilityDetails;
+		})
+	);
+
+	return { data, moveDetails, speciesData, abilityDetails };
 };
