@@ -33,7 +33,7 @@ type Sprites = {
 	};
 };
 
-type PokemonType = {
+export type PokemonType = {
 	slot: number;
 	type: {
 		name: string;
@@ -114,6 +114,7 @@ export const load: PageServerLoad = async ({ fetch, params }) => {
 	const data = (await res.json()) as Pokemon;
 	const speciesData = (await species.json()) as Species;
 
+	// this takes a while to load
 	const moveDetails = await Promise.all(
 		data.moves.map(async (move) => {
 			const res = await fetch(move.move.url);

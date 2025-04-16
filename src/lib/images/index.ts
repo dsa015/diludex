@@ -36,5 +36,6 @@ export const images = {
 	psychic,
 	rock,
 	steel,
-	water
+	water,
+	stellar
 };

@@ -7,7 +7,7 @@
 	let { data }: PageProps = $props();
 
 	const pokemonName = toUpperCase(data.data.name);
-	const imgSrc = data.data.sprites.other.dream_world.front_default;
+	const imgSrc = data.data.sprites.other['official-artwork'].front_default;
 	const imgAndAlt = {
 		src: imgSrc,
 		alt: data.data.name

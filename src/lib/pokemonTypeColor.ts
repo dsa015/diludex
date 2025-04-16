@@ -20,3 +20,10 @@ export const pokemonTypeColor = {
 	stellar: '#40B5A5',
 	unknown: '#9DC1B7'
 };
+
+const pokemonBackgroundColor = {
+	normal: {
+		color: '#A8A77A',
+		cardColor: 'background: linear-gradient(0deg, #A8A77A 0%, #A8A77A 100%);'
+	}
+};

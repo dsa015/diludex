@@ -2,8 +2,8 @@
 	import { images } from '$lib/images';
 	import { pokemonTypeColor } from '$lib/pokemonTypeColor';
 	import { toUpperCase } from '$lib/utils';
+	import type { PokemonType } from '../../routes/pokemon/[name]/+page.server';
 	import AbilityDetails from './AbilityDetails.svelte';
-	import PokemonStats from './PokemonStats.svelte';
 
 	let { data, imgAndAlt } = $props();
 
@@ -19,9 +19,24 @@
 	const englishFlavorText = data.speciesData.flavor_text_entries.find(
 		(entry: any) => entry.language.name === 'en'
 	).flavor_text;
+
+	const typeFormatter = (type: PokemonType[]) => {
+		if (type.length > 1) {
+			return type.map((t: any) => toUpperCase(t.type.name)).join('/');
+		} else {
+			return toUpperCase(type[0].type.name);
+		}
+	};
+
+	const hectogramToKg = (weight: number) => {
+		return weight / 10;
+	};
+	const decimetreToMeter = (height: number) => {
+		return height / 10;
+	};
 </script>
 
-<div class="info">
+<article class="info">
 	<ul class="type">
 		{#each data.data.types as type}
 			<li id="pokemonType">
@@ -35,25 +50,65 @@
 	<h3>{toUpperCase(englishFlavorText)}</h3>
 
 	<AbilityDetails {data} />
-</div>
+</article>
 
-<div id="card">
-	<p>{toUpperCase(data.data.name)}</p>
-	<img id="picture" src={imgAndAlt.src} alt={imgAndAlt.alt} />
-	<ul id="type">
-		{#each data.data.types as type}
-			<li id="pokemonType">
+<section
+	id="card"
+	style="background-color: {typeWithColor(data.data.types[0].type.name).backgroundColor}"
+>
+	<div class="name">
+		<!-- <img src="" alt="" id="previousEvolution" /> -->
+		<span>{toUpperCase(data.data.name)}</span>
+		<div>
+			{#each data.data.types as type}
 				<img src={typeWithColor(type.type.name).icon} alt={type.type.name} />
-				<span>
-					{toUpperCase(type.type.name)}
-				</span>
-			</li>
-		{/each}
-	</ul>
-	<PokemonStats {data} />
-</div>
+			{/each}
+		</div>
+	</div>
+	<img id="picture" src={imgAndAlt.src} alt={imgAndAlt.alt} />
+
+	<div>
+		<div id="cardPokemonStats">
+			<span>NO.{data.data.id}</span>
+			<span>
+				{typeFormatter(data.data.types)} Pokemon.
+			</span>
+			<span>{decimetreToMeter(data.data.height)}M,</span>
+			<span>{hectogramToKg(data.data.weight)}Kg</span>
+		</div>
+	</div>
+
+	<!-- <PokemonStats {data} /> -->
+</section>
 
 <style>
+	.name {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+	}
+
+	.name span {
+		font-size: x-large;
+		font-weight: bold;
+	}
+	.name img {
+		width: 30px;
+		height: 30px;
+		border-radius: 50%;
+		box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+	}
+
+	#cardPokemonStats {
+		font-weight: bold;
+		font-style: italic;
+		font-size: small;
+		max-width: fit-content;
+		background: linear-gradient(to right, #c18b2e, #fcf6ba, #efd293, #fbf5b7, #c18b2e);
+		padding: 5px;
+	}
+
 	.info {
 		max-width: 700px;
 		width: 100%;
@@ -61,34 +116,49 @@
 	h3 {
 		font-weight: 300;
 	}
-	#type {
-		padding: 0;
-		display: flex;
-		justify-content: center;
-		gap: 1rem;
-	}
-	#type span {
-		color: white;
-	}
+
 	#card {
-		border: 5px solid #5a5a5a;
+		border: 20px solid gold;
 		padding: 1rem;
 		border-radius: 10px;
 		text-align: center;
-	}
+		position: relative;
 
-	#card p {
-		font-size: xx-large;
-		margin-top: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		max-height: max-content;
 	}
 
 	#card #picture {
+		padding: 1rem;
+		margin-bottom: 10px;
+		padding: 0;
+		border: 7px solid transparent; /* Set the border width */
+		border-image: linear-gradient(to left, #e8b864, #fcf6ba, #efd293, #fbf5b7, #e8b864);
+		border-image-slice: 1;
+		border-radius: 5px;
+
+		/* background: linear-gradient(to bottom, #e07474, #72716e, #4e4d4d, #e07474, #4e4d4d); */
+		background-color: white;
+	}
+
+	img {
 		width: 350px;
 		height: 350px;
-		padding: 1rem;
-		border: 1px solid black;
-		border-radius: 5px;
 	}
+
+	/* #card #previousEvolution {
+		width: 60px;
+		height: 60px;
+		position: absolute;
+		border: 2px solid red;
+		background-color: red;
+		border-radius: 70px;
+		left: 0px;
+		top: 50px;
+	} */
 
 	.type {
 		display: flex;
