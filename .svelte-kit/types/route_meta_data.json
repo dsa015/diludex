@@ -1,8 +1,0 @@
-{
-	"/": [
-		"src/routes/+page.server.ts"
-	],
-	"/pokemon/[name]": [
-		"src/routes/pokemon/[name]/+page.server.ts"
-	]
-}
