@@ -1,12 +1,7 @@
 <script lang="ts">
-	import { toUpperCase } from '$lib/utils';
-	import { images } from '$lib/images';
+	import { toUpperCase, typeWithColor } from '$lib/utils';
 
 	let { moves } = $props();
-
-	const typeIcon = (type: string) => {
-		return images[type as keyof typeof images];
-	};
 
 	const subSet = moves.moveDetails.slice(0, 30);
 </script>
@@ -33,7 +28,7 @@
 				<td>{toUpperCase(move.name)}</td>
 				<!-- <td>{move.learnMethod}</td> -->
 				<td>
-					<img src={typeIcon(move.type.name)} alt={move.type.name} />{toUpperCase(
+					<img src={typeWithColor(move.type.name).icon} alt={move.type.name} />{toUpperCase(
 						move.type.name
 					)}</td
 				>

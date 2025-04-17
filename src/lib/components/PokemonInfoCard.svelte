@@ -1,20 +1,9 @@
 <script lang="ts">
-	import { images } from '$lib/images';
-	import { pokemonTypeColor } from '$lib/pokemonTypeColor';
-	import { toUpperCase } from '$lib/utils';
+	import { toUpperCase, typeWithColor } from '$lib/utils';
 	import type { PokemonType } from '../../routes/pokemon/[name]/+page.server';
 	import AbilityDetails from './AbilityDetails.svelte';
 
 	let { data, imgAndAlt } = $props();
-
-	const typeWithColor = (type: string) => {
-		const color = pokemonTypeColor[type as keyof typeof pokemonTypeColor];
-		const image = images[type as keyof typeof images];
-		return {
-			backgroundColor: color,
-			icon: image
-		};
-	};
 
 	const englishFlavorText = data.speciesData.flavor_text_entries.find(
 		(entry: any) => entry.language.name === 'en'
