@@ -108,8 +108,10 @@ export type Species = {
 };
 
 export const load: PageServerLoad = async ({ fetch, params }) => {
+	const pokemonOriginName = params.name.split('-')[0];
+
 	const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${params.name}`);
-	const species = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${params.name}`);
+	const species = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemonOriginName}`);
 
 	const data = (await res.json()) as Pokemon;
 	const speciesData = (await species.json()) as Species;

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { toUpperCase } from '$lib/utils.js';
+	import { toUpperCase, typeWithColor } from '$lib/utils.js';
 	import type { PageProps } from './$types';
 	import PokemonInfoCard from '$lib/components/PokemonInfoCard.svelte';
 	import MovePool from '$lib/components/MovePool.svelte';

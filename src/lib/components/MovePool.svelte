@@ -2,8 +2,6 @@
 	import { toUpperCase, typeWithColor } from '$lib/utils';
 
 	let { moves } = $props();
-
-	const subSet = moves.moveDetails.slice(0, 30);
 </script>
 
 <h2>Learnable moves</h2>
@@ -22,7 +20,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		{#each subSet as move}
+		{#each moves.moveDetails as move}
 			<tr>
 				<!-- <td>{move.level}</td> -->
 				<td>{toUpperCase(move.name)}</td>
@@ -43,8 +41,25 @@
 
 <style>
 	table {
+		background-color: white;
+		margin-bottom: 2rem;
+		border-radius: 8px; /* Optional: Rounds the corners of the table */
+	}
+
+	thead {
+		background-color: #f2f2f2;
+	}
+
+	tbody {
+		display: block;
+		max-height: 400px;
+		overflow-y: auto;
+	}
+
+	tr {
+		display: table;
+		table-layout: fixed;
 		width: 100%;
-		border-collapse: collapse;
 	}
 
 	th,
@@ -59,9 +74,5 @@
 		height: 20px;
 		padding-right: 10px;
 		vertical-align: middle;
-	}
-
-	thead {
-		background-color: #f2f2f2;
 	}
 </style>

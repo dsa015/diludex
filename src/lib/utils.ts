@@ -12,14 +12,12 @@ export const toUpperCase = (str: string) => {
 	return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-// search function
-const filter = (val: string, subset: Pokemons[]) => {
-	return subset.filter((result) => {
+export const filtered = (val: string, subset: Pokemons[]) => {
+	const filtered = subset.filter((result) => {
 		return result.name.toLowerCase().includes(val.toLowerCase());
 	});
-};
-export const filtered = (val: string, subset: Pokemons[]) => {
-	return val.length > 0 ? filter(val, subset) : subset;
+
+	return val.length > 0 ? filtered : subset;
 };
 
 export const typeWithColor = (type: string) => {
