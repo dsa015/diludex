@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { toUpperCase, typeWithColor } from '$lib/utils.js';
+	import { PokemonInfoCard, MovePool } from '$lib';
+	import { toUpperCase } from '$lib/utils.js';
 	import type { PageProps } from './$types';
-	import PokemonInfoCard from '$lib/components/PokemonInfoCard.svelte';
-	import MovePool from '$lib/components/MovePool.svelte';
 
 	let { data }: PageProps = $props();
 
@@ -15,7 +14,7 @@
 </script>
 
 <main>
-	<a href="/">Go back</a>
+	<a href="/">PokéScope</a>
 
 	<h1>{pokemonName}</h1>
 
@@ -30,6 +29,14 @@
 <style>
 	h1 {
 		margin-bottom: 0;
+		font-size: 3rem;
+	}
+
+	a {
+		font-size: 3vw;
+		text-decoration: none;
+		color: black;
+		font-weight: 700;
 	}
 
 	section div {

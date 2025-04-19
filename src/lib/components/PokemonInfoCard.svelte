@@ -79,7 +79,8 @@
 	}
 
 	.name span {
-		font-size: x-large;
+		font-family: sans-serif;
+		font-size: 20px;
 		font-weight: bold;
 	}
 	.name img {
@@ -92,6 +93,7 @@
 	#cardPokemonStats {
 		font-weight: bold;
 		font-style: italic;
+		font-family: sans-serif;
 		font-size: small;
 		max-width: fit-content;
 		background: linear-gradient(to right, #c18b2e, #fcf6ba, #efd293, #fbf5b7, #c18b2e);

@@ -92,6 +92,10 @@ export type Pokemon = {
 	sprites: Sprites;
 	types: PokemonType[];
 	moves: Moves[];
+	cries: {
+		latest: string;
+		legacy: string;
+	};
 };
 
 export type Species = {

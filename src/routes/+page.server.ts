@@ -13,6 +13,7 @@ type NamedApiResourseList = {
 export type Pokemons = {
 	name: string;
 	image: string;
+	normalImage: string;
 	pokemonUrl: string;
 };
 
@@ -41,6 +42,7 @@ export const load: PageServerLoad = async () => {
 		return {
 			name: result.name,
 			image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonIndex}.png`,
+			normalImage: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonIndex}.png`,
 			pokemonUrl: result.url
 		};
 	});

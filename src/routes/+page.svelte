@@ -1,41 +1,65 @@
 <script lang="ts">
 	import { filtered, toUpperCase } from '$lib/utils';
 	import type { PageProps } from './$types';
+	import PaginationBox from '$lib/components/PaginationBox.svelte';
+	import FloatingPokemon from '$lib/components/FloatingPokemon.svelte';
 
 	let { data }: PageProps = $props();
 
 	let val = $state('');
+	let page = $state(1);
+	let pageSize = 18;
+	let pageCount = $state(Math.ceil(data.pokemonDataSet.length / pageSize));
 </script>
 
-<header>
-	<h1>PokéScope</h1>
-	<input type="text" placeholder="Search..." bind:value={val} />
-</header>
+<FloatingPokemon pokemonDataSet={data.pokemonDataSet} />
 
 <main>
+	<header>
+		<h1>PokéScope</h1>
+		<input type="text" placeholder="Search..." bind:value={val} />
+	</header>
 	{#if filtered(val, data.pokemonDataSet).length === 0}
 		<p>Pokémon not found ...</p>
 	{/if}
-	<ul>
-		{#each filtered(val, data.pokemonDataSet) as result}
-			<li>
-				<a href="/pokemon/{result.name}">
-					<span>
-						{toUpperCase(result.name)}
-					</span>
-					<img src={result.image} alt={result.name} loading="lazy" />
-				</a>
-			</li>
-		{/each}
-	</ul>
+
+	<article>
+		<PaginationBox bind:page bind:pageCount />
+		<div class="pokemon-list">
+			<ul>
+				{#each filtered(val, data.pokemonDataSet).slice((page - 1) * pageSize, page * pageSize) as pokemon}
+					<li>
+						<a href={`/pokemon/${pokemon.name}`}>
+							<img src={pokemon.normalImage} alt={pokemon.name} />
+							<span>{toUpperCase(pokemon.name)}</span>
+						</a>
+					</li>
+				{/each}
+			</ul>
+		</div>
+	</article>
 </main>
 
 <style>
+	main {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 3rem;
+	}
+
 	header {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		margin-bottom: 1rem;
+	}
+	article {
+		max-width: 55rem;
+		width: 100%;
+	}
+
+	input {
+		z-index: 1;
 	}
 
 	h1 {
@@ -52,24 +76,36 @@
 		max-width: 20rem;
 	}
 
-	main {
-		display: flex;
-		flex-direction: column;
-	}
-
 	ul {
-		padding-left: 0;
+		min-height: 470px;
 		display: flex;
 		flex-wrap: wrap;
 		list-style: none;
+		border-radius: 8px;
+		background-color: rgb(123, 228, 109);
+		border-left: 10px solid rgb(188, 247, 180);
+		border-top: 10px solid rgb(188, 247, 180);
+		border-bottom: 10px solid rgb(104, 154, 98);
+		border-right: 10px solid rgb(104, 154, 98);
+		clip-path: var(--polygon-border);
+	}
+
+	.pokemon-list {
+		position: relative;
+	}
+
+	.pokemon-list::after {
+		content: '';
+		position: absolute;
+		inset: -6px;
+		z-index: -1;
+		background: rgb(88, 89, 88);
+		clip-path: var(--polygon-border);
 	}
 
 	li {
 		margin: 0.5rem;
 		padding: 0.5rem;
-		border-radius: 4px;
-		background-color: #f9f9f9;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	}
 	li a {
 		display: flex;
@@ -79,16 +115,26 @@
 	}
 
 	li a:hover img {
-		transform: scale(1.1);
-		transition: transform 0.2s;
+		animation: snapUpDown 0.35s infinite;
 	}
 	li img {
 		width: 100px;
 		height: 100px;
-		transition: transform 0.2s;
 	}
 
 	a span {
 		text-align: center;
+	}
+
+	@keyframes snapUpDown {
+		0% {
+			transform: translateY(0);
+		}
+		50% {
+			transform: translateY(-10px);
+		}
+		100% {
+			transform: translateY(0);
+		}
 	}
 </style>
