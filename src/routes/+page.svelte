@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { filtered, toUpperCase } from '$lib/utils';
 	import type { PageProps } from './$types';
-	import PaginationBox from '$lib/components/PaginationBox.svelte';
-	import FloatingPokemon from '$lib/components/FloatingPokemon.svelte';
+	import { PaginationBox } from '$lib';
 
 	let { data }: PageProps = $props();
 
@@ -12,7 +11,7 @@
 	let pageCount = $state(Math.ceil(data.pokemonDataSet.length / pageSize));
 </script>
 
-<FloatingPokemon pokemonDataSet={data.pokemonDataSet} />
+<!-- <FloatingPokemon pokemonDataSet={data.pokemonDataSet} /> -->
 
 <main>
 	<header>

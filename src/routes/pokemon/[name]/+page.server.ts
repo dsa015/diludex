@@ -109,6 +109,55 @@ export type Species = {
 	color: {
 		name: string;
 	};
+	evolution_chain: {
+		url: string;
+	};
+};
+export type EvolutionTrigger = {
+	name: string;
+	url: string;
+};
+
+export type EvolutionDetails = {
+	gender: number | null;
+	held_item: string | null;
+	item: {
+		name: string;
+		url: string;
+	} | null;
+	known_move: string | null;
+	known_move_type: string | null;
+	location: string | null;
+	min_affection: number | null;
+	min_beauty: number | null;
+	min_happiness: number | null;
+	min_level: number | null;
+	needs_overworld_rain: boolean;
+	party_species: string | null;
+	party_type: string | null;
+	relative_physical_stats: number | null;
+	time_of_day: string;
+	trade_species: string | null;
+	trigger: EvolutionTrigger;
+	turn_upside_down: boolean;
+};
+
+export type EvolutionSpecies = {
+	name: string;
+	url: string;
+};
+
+export type EvolutionChainNode = {
+	evolution_details: EvolutionDetails[];
+	evolves_to: EvolutionChainNode[];
+	is_baby: boolean;
+	species: EvolutionSpecies;
+};
+
+export type EvolutionChain = {
+	baby_trigger_item: string | null;
+	chain: EvolutionChainNode;
+	id: number;
 };
 
 export const load: PageServerLoad = async ({ fetch, params }) => {
@@ -137,5 +186,8 @@ export const load: PageServerLoad = async ({ fetch, params }) => {
 		})
 	);
 
-	return { data, moveDetails, speciesData, abilityDetails };
+	const evoData = await fetch(speciesData.evolution_chain.url);
+	const evolutionChain = (await evoData.json()) as EvolutionChain;
+
+	return { data, moveDetails, speciesData, abilityDetails, evolutionChain };
 };
