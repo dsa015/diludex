@@ -4,6 +4,19 @@
 	import { onMount } from 'svelte';
 	import type { PageProps } from './$types';
 	import type { EvolutionChainNode } from './+page.server';
+	import EvolutionChain from '$lib/components/EvolutionChain.svelte';
+
+	type evo = {
+		name: string | null;
+		miniumLevel: (number | null)[];
+		levelMethod: (string | null)[];
+		item: (string | undefined)[];
+	}[];
+
+	type detail = {
+		name: string;
+		sprites: string;
+	}[];
 
 	let { data }: PageProps = $props();
 
@@ -13,13 +26,6 @@
 		src: imgSrc,
 		alt: data.data.name
 	};
-
-	type evo = {
-		name: string | null;
-		miniumLevel: (number | null)[];
-		levelMethod: (string | null)[];
-		item: (string | undefined)[];
-	}[];
 
 	const getEvolutionChain = (evolutionChain: EvolutionChainNode) => {
 		const evolutions: evo = [
@@ -40,10 +46,7 @@
 
 	const evolutionNames = getEvolutionChain(data.evolutionChain.chain);
 
-	let detail = $state() as {
-		name: string;
-		sprites: string;
-	}[];
+	let detail = $state() as detail;
 
 	onMount(async () => {
 		const pokemonDetails = await Promise.all(
@@ -70,19 +73,13 @@
 		<div>
 			<PokemonInfoCard {data} {imgAndAlt} />
 		</div>
+		<h1>Evolution chain</h1>
+
 		<div id="container">
-			<h1>Evolution chain</h1>
 			{#each evolutionNames as evo}
 				{#each detail as d}
 					{#if d.name === evo.name}
-						<div class="evolutionChain">
-							<span>
-								<span>
-									{toUpperCase(evo.name ?? '')}
-								</span>
-							</span>
-							<img src={d.sprites} alt="" />
-						</div>
+						<EvolutionChain {d} {evolutionNames} {evo} />
 					{/if}
 				{/each}
 			{/each}
@@ -108,31 +105,10 @@
 		display: flex;
 		justify-content: space-between;
 	}
-
-	.evolutionChain {
-		display: flex;
-		justify-content: space-between;
-		flex-direction: column;
-		align-items: center;
-		gap: 5rem;
-		justify-content: center;
-	}
-
-	.evolutionChain span {
-		font-size: x-large;
-	}
-
 	#container {
-		margin-top: 2rem;
 		display: flex;
-		flex-direction: column;
-		border: 2px solid black;
-		border-radius: 1rem;
-		padding: 2rem;
-	}
-
-	img {
-		width: 100px;
-		height: 100px;
+		gap: 2rem;
+		align-items: center;
+		overflow-x: scroll;
 	}
 </style>
