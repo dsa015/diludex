@@ -109,6 +109,7 @@
 		display: flex;
 		gap: 2rem;
 		align-items: center;
-		overflow-x: scroll;
+		justify-self: center;
+		padding: 2rem;
 	}
 </style>
