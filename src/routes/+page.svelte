@@ -15,7 +15,7 @@
 
 <main>
 	<header>
-		<h1>PokéScope</h1>
+		<h1>DiluDex</h1>
 		<input type="text" placeholder="Search..." bind:value={val} />
 	</header>
 	{#if filtered(val, data.pokemonDataSet).length === 0}
