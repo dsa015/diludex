@@ -6,7 +6,7 @@
 
 <div id="abilities">
 	<h3>Abilities</h3>
-	{#each data.data.abilities as ability}
+	{#each data.pokemon.abilities as ability}
 		<p id="abilityName">
 			{toUpperCase(ability.ability.name)}
 

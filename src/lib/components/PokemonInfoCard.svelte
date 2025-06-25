@@ -5,7 +5,7 @@
 
 	let { data, imgAndAlt } = $props();
 
-	const englishFlavorText = data.speciesData.flavor_text_entries.find(
+	const englishFlavorText = data.pokemon_species.flavor_text_entries.find(
 		(entry: any) => entry.language.name === 'en'
 	).flavor_text;
 
@@ -27,7 +27,7 @@
 
 <article class="info">
 	<ul class="type">
-		{#each data.data.types as type}
+		{#each data.pokemon.pokemonType as type}
 			<li id="pokemonType">
 				<img src={typeWithColor(type.type.name).icon} alt={type.type.name} />
 				<p>
@@ -43,13 +43,13 @@
 
 <section
 	id="card"
-	style="background-color: {typeWithColor(data.data.types[0].type.name).backgroundColor}"
+	style="background-color: {typeWithColor(data.pokemon.pokemonType[0].type.name).backgroundColor}"
 >
 	<div class="name">
 		<!-- <img src="" alt="" id="previousEvolution" /> -->
-		<span>{toUpperCase(data.data.name)}</span>
+		<span>{toUpperCase(data.pokemon.name)}</span>
 		<div>
-			{#each data.data.types as type}
+			{#each data.pokemon.pokemonType as type}
 				<img src={typeWithColor(type.type.name).icon} alt={type.type.name} />
 			{/each}
 		</div>
@@ -58,12 +58,12 @@
 
 	<div>
 		<div id="cardPokemonStats">
-			<span>NO.{data.data.id}</span>
+			<!-- <span>NO.{data.data.id}</span> -->
 			<span>
-				{typeFormatter(data.data.types)} Pokemon.
+				{typeFormatter(data.pokemon.pokemonType)} Pokemon.
 			</span>
-			<span>{decimetreToMeter(data.data.height)}M,</span>
-			<span>{hectogramToKg(data.data.weight)}Kg</span>
+			<span>{decimetreToMeter(data.pokemon.height)}M,</span>
+			<span>{hectogramToKg(data.pokemon.weight)}Kg</span>
 		</div>
 	</div>
 
