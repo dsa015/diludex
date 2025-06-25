@@ -8,18 +8,17 @@
 	<h3>Abilities</h3>
 	{#each data.pokemon.abilities as ability}
 		<p id="abilityName">
-			{toUpperCase(ability.ability.name)}
+			{toUpperCase(ability.name)}
 
-			{#if ability.is_hidden}
+			{#if ability.isHidden}
 				<span>(Hidden)</span>
 			{/if}
 		</p>
 		<p>
-			{#each data.abilityDetails as details}
-				{#if details.name === ability.ability.name}
-					{details.effect_entries.find((e: any) => e.language.name === 'en').effect}
-				{/if}
-			{/each}
+			{ability.effectEntries.effect}
+		</p>
+		<p>
+			{ability.flavourText}
 		</p>
 	{/each}
 </div>

@@ -1,34 +1,26 @@
 import type { PageServerLoad } from './$types';
 
-type Abilities = {
-	is_hidden: boolean;
-	slot: number;
-	ability: {
-		name: string;
-		url: string;
-	};
-};
-
-type AbilityDetails = {
+type PokemonAbility = {
+	id: number;
 	name: string;
-	effect_entries: {
+	effectEntries: {
 		effect: string;
+		short_effect: string;
 		language: {
 			name: string;
 			url: string;
 		};
-	}[];
+	};
+	flavourText: string;
+	isHidden: boolean;
 };
 
-type Sprites = {
+type ArtWork = {
 	front_default: string;
-	front_shiny: string;
 	other: {
-		dream_world: {
-			front_default: string;
-		};
 		'official-artwork': {
 			front_default: string;
+			front_shiny: string;
 		};
 	};
 };
@@ -41,25 +33,25 @@ export type PokemonType = {
 	};
 };
 
-type VersionGroupDetails = {
-	level_learned_at: number;
-	move_learn_method: {
-		name: string;
-		url: string;
-	};
-	version_group: {
-		name: string;
-		url: string;
-	};
-};
+// type VersionGroupDetails = {
+// 	level_learned_at: number;
+// 	move_learn_method: {
+// 		name: string;
+// 		url: string;
+// 	};
+// 	version_group: {
+// 		name: string;
+// 		url: string;
+// 	};
+// };
 
-type Moves = {
-	move: {
-		name: string;
-		url: string;
-	};
-	version_group_details: VersionGroupDetails[];
-};
+// type Moves = {
+// 	move: {
+// 		name: string;
+// 		url: string;
+// 	};
+// 	version_group_details: VersionGroupDetails[];
+// };
 
 export type Move = {
 	id: number;
@@ -73,21 +65,6 @@ export type Move = {
 	power: number;
 	type: {
 		name: string;
-	};
-};
-
-export type Pokemon = {
-	id: number;
-	name: string;
-	weight: number;
-	height: number;
-	abilities: Abilities[];
-	sprites: Sprites;
-	types: PokemonType[];
-	moves: Moves[];
-	cries: {
-		latest: string;
-		legacy: string;
 	};
 };
 
@@ -107,8 +84,9 @@ export type Species = {
 	};
 };
 
-type P = {
-	abilities: Abilities[];
+type Pokemon = {
+	id: number;
+	abilities: PokemonAbility[];
 	base_experience: number;
 	name: string;
 	height: number;
@@ -118,15 +96,7 @@ type P = {
 		legacy: string;
 	};
 	pokemonType: PokemonType[];
-	artwork: {
-		front_default: string;
-		other: {
-			'official-artwork': {
-				front_default: string;
-				front_shiny: string;
-			};
-		};
-	};
+	artwork: ArtWork;
 	forms: {
 		name: string;
 		url: string;
@@ -134,7 +104,7 @@ type P = {
 };
 
 type PokemonDetails = {
-	pokemon: P;
+	pokemon: Pokemon;
 	pokemon_species: Species;
 	evolution_chain: {
 		name: string;
@@ -143,8 +113,6 @@ type PokemonDetails = {
 };
 
 export const load: PageServerLoad = async ({ fetch, params }) => {
-	//const pokemonOriginName = params.name.split('-')[0];
-
 	const res = await fetch(`https://bff-diludex.dilu.dev/api/v1/pokemon/${params.name}`);
 
 	const data = (await res.json()) as PokemonDetails;

@@ -14,26 +14,26 @@
 	<li>
 		<span> Pokemon ID: </span>
 		<span>
-			#{data.data.id}
+			#{data.pokemon.id}
 		</span>
 	</li>
 	<li>
 		<span>Height: </span>
 		<span>
-			{decimetreToMeter(data.data.height)} M
+			{decimetreToMeter(data.pokemon.height)} M
 		</span>
 	</li>
 	<li>
 		<span>Weight: </span>
 		<span>
-			{hectogramToKg(data.data.weight)} Kg
+			{hectogramToKg(data.pokemon.weight)} Kg
 		</span>
 	</li>
 
-	<li>
+	<!-- <li>
 		<span>Color:</span>
 		<span>{toUpperCase(data.speciesData.color.name)}</span>
-	</li>
+	</li> -->
 </ul>
 
 <style>

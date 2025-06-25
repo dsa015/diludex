@@ -2,6 +2,7 @@
 	import { toUpperCase, typeWithColor } from '$lib/utils';
 	import type { PokemonType } from '../../routes/pokemon/[name]/+page.server';
 	import AbilityDetails from './AbilityDetails.svelte';
+	import PokemonStats from './PokemonStats.svelte';
 
 	let { data, imgAndAlt } = $props();
 
@@ -58,7 +59,7 @@
 
 	<div>
 		<div id="cardPokemonStats">
-			<!-- <span>NO.{data.data.id}</span> -->
+			<span>NO.{data.pokemon.id}</span>
 			<span>
 				{typeFormatter(data.pokemon.pokemonType)} Pokemon.
 			</span>
@@ -67,7 +68,7 @@
 		</div>
 	</div>
 
-	<!-- <PokemonStats {data} /> -->
+	<PokemonStats {data} />
 </section>
 
 <style>
