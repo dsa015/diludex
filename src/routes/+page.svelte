@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { filtered, toUpperCase } from '$lib/utils';
-	import type { PageProps } from './$types';
 	import { PaginationBox } from '$lib';
+	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
 
@@ -16,11 +16,12 @@
 <main>
 	<header>
 		<h1>DiluDex</h1>
+		<div></div>
 		<input type="text" placeholder="Search..." bind:value={val} />
+		{#if filtered(val, data.pokemonDataSet).length === 0}
+			<p>Pokémon not found ...</p>
+		{/if}
 	</header>
-	{#if filtered(val, data.pokemonDataSet).length === 0}
-		<p>Pokémon not found ...</p>
-	{/if}
 
 	<article>
 		<PaginationBox bind:page bind:pageCount />
@@ -59,20 +60,17 @@
 
 	input {
 		z-index: 1;
-	}
-
-	h1 {
-		color: black;
-		font-size: 7vw;
-	}
-
-	input {
 		padding: 0.5rem 1rem;
 		border: 1px solid #ccc;
 		border-radius: 8px;
 		font-size: 16px;
 		width: 100%;
 		max-width: 20rem;
+	}
+
+	h1 {
+		color: black;
+		font-size: 7vw;
 	}
 
 	ul {

@@ -1,71 +1,33 @@
 <script lang="ts">
 	import { PokemonInfoCard, MovePool } from '$lib';
 	import { toUpperCase } from '$lib/utils.js';
-	import { onMount } from 'svelte';
 	import type { PageProps } from './$types';
-	import type { EvolutionChainNode } from './+page.server';
 	import EvolutionChain from '$lib/components/EvolutionChain.svelte';
-
-	type evo = {
-		name: string | null;
-		miniumLevel: (number | null)[];
-		levelMethod: (string | null)[];
-		item: (string | undefined)[];
-	}[];
-
-	type detail = {
-		name: string;
-		sprites: string;
-	}[];
+	import type { EvoChainAndImage } from '$lib/types';
 
 	let { data }: PageProps = $props();
 
-	const pokemonName = toUpperCase(data.data.name);
-	const imgSrc = data.data.sprites.other['official-artwork'].front_default;
+	const pokemonName = toUpperCase(data.pokemon.forms[0].name);
+	const imgSrc = data.pokemon.artwork.other['official-artwork'].front_default;
 	const imgAndAlt = {
 		src: imgSrc,
-		alt: data.data.name
+		alt: data.pokemon.name
 	};
 
-	const getEvolutionChain = (evolutionChain: EvolutionChainNode) => {
-		const evolutions: evo = [
-			{
-				name: evolutionChain.species.name,
-				miniumLevel: evolutionChain.evolution_details.map((detail) => detail.min_level) ?? null,
-				levelMethod: evolutionChain.evolution_details.map((detail) => detail.trigger.name) ?? null,
-				item: evolutionChain.evolution_details.map((detail) => detail.item?.name) ?? null
-			}
-		];
+	const filteredPokemonByEvolution = data.pokemonDataSet.filter((pokemon) =>
+		data.evolution_chain.some((evo) => evo.name === pokemon.name)
+	);
 
-		for (const evolution of evolutionChain.evolves_to) {
-			evolutions.push(...getEvolutionChain(evolution));
-		}
-
-		return evolutions;
-	};
-
-	const evolutionNames = getEvolutionChain(data.evolutionChain.chain);
-
-	let detail = $state() as detail;
-
-	onMount(async () => {
-		const pokemonDetails = await Promise.all(
-			evolutionNames.map(async (evo) => {
-				const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${evo.name}`);
-				return res.json();
-			})
-		);
-		detail = pokemonDetails.map((evo) => {
-			return {
-				name: evo.name,
-				sprites: evo.sprites.other['official-artwork'].front_default
-			};
-		});
+	const evolutionChainAndImage: EvoChainAndImage[] = filteredPokemonByEvolution.map((pokemon) => {
+		return {
+			name: pokemon.name,
+			image: pokemon.normalImage
+		};
 	});
 </script>
 
 <main>
-	<a href="/">PokéScope</a>
+	<a href="/">Diludex</a>
 
 	<h1>{pokemonName}</h1>
 
@@ -76,15 +38,9 @@
 		<h1>Evolution chain</h1>
 
 		<div id="container">
-			{#each evolutionNames as evo}
-				{#each detail as d}
-					{#if d.name === evo.name}
-						<EvolutionChain {d} {evolutionNames} {evo} />
-					{/if}
-				{/each}
-			{/each}
+			<EvolutionChain {evolutionChainAndImage} />
 		</div>
-		<MovePool moves={data} />
+		<MovePool moves={data.moves} />
 	</section>
 </main>
 

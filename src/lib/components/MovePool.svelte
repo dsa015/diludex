@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { toUpperCase, typeWithColor } from '$lib/utils';
+	import type { Move } from '../../routes/pokemon/[name]/+page.server';
 
-	let { moves } = $props();
+	let { moves }: { moves: Move[] } = $props();
 </script>
 
 <h2>Learnable moves</h2>
@@ -20,7 +21,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		{#each moves.moveDetails as move}
+		{#each moves as move}
 			<tr>
 				<!-- <td>{move.level}</td> -->
 				<td>{toUpperCase(move.name)}</td>
@@ -30,7 +31,7 @@
 						move.type.name
 					)}</td
 				>
-				<td>{move.power}</td>
+				<td>{move.power ?? '—'}</td>
 				<td>{move.pp}</td>
 				<td>{move.accuracy ? move.accuracy + '%' : '—'}</td>
 				<td>{toUpperCase(move.damage_class.name)}</td>
