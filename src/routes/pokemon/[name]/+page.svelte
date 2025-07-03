@@ -3,13 +3,13 @@
 	import { toUpperCase } from '$lib/utils.js';
 	import type { PageProps } from './$types';
 	import EvolutionChain from '$lib/components/EvolutionChain.svelte';
-	import type { EvoChainAndImage } from '$lib/types';
+	import type { EvoChainAndImage, ImgAndAlt } from '$lib/types';
 
 	let { data }: PageProps = $props();
 
 	const pokemonName = toUpperCase(data.pokemon.forms[0].name);
 	const imgSrc = data.pokemon.artwork.other['official-artwork'].front_default;
-	const imgAndAlt = {
+	const imgAndAlt: ImgAndAlt = {
 		src: imgSrc,
 		alt: data.pokemon.name
 	};
@@ -33,7 +33,7 @@
 
 	<section>
 		<div>
-			<PokemonInfoCard {data} {imgAndAlt} />
+			<PokemonInfoCard {data} {imgAndAlt} {evolutionChainAndImage} />
 		</div>
 		<h1>Evolution chain</h1>
 
@@ -62,10 +62,23 @@
 		justify-content: space-between;
 	}
 	#container {
+		max-width: 1261px;
 		display: flex;
 		gap: 2rem;
 		align-items: center;
 		justify-self: center;
 		padding: 2rem;
+	}
+
+	@media screen and (max-width: 1100px) {
+		section {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+		#container {
+			flex-direction: column;
+			align-items: center;
+		}
 	}
 </style>

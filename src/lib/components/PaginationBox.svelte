@@ -7,11 +7,7 @@
 
 <div class="pagination">
 	<LeftArrow bind:page bind:pageCount />
-	<div
-		style="
-				background-image: url({pokemonPageArt})
-				"
-	>
+	<div style="background-image: url({pokemonPageArt})">
 		<span>Page {page} of {pageCount}</span>
 	</div>
 	<RightArrow bind:page bind:pageCount />

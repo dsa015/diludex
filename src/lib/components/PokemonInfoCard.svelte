@@ -1,14 +1,19 @@
 <script lang="ts">
+	import type { EvoChainAndImage, ImgAndAlt, PokemonDetails, PokemonType } from '$lib/types';
 	import { toUpperCase, typeWithColor } from '$lib/utils';
-	import type { PokemonType } from '../../routes/pokemon/[name]/+page.server';
 	import AbilityDetails from './AbilityDetails.svelte';
 	import PokemonStats from './PokemonStats.svelte';
 
-	let { data, imgAndAlt } = $props();
+	let {
+		data,
+		imgAndAlt,
+		evolutionChainAndImage
+	}: { data: PokemonDetails; imgAndAlt: ImgAndAlt; evolutionChainAndImage: EvoChainAndImage[] } =
+		$props();
 
 	const englishFlavorText = data.pokemon_species.flavor_text_entries.find(
 		(entry: any) => entry.language.name === 'en'
-	).flavor_text;
+	)!!.flavor_text;
 
 	const typeFormatter = (type: PokemonType[]) => {
 		if (type.length > 1) {
@@ -24,52 +29,76 @@
 	const decimetreToMeter = (height: number) => {
 		return height / 10;
 	};
+
+	let isPlayingAudio = $state(false);
+	function playPokemonCry() {
+		if (isPlayingAudio) return;
+		isPlayingAudio = true;
+		const audio = new Audio(data.pokemon.cries.latest);
+		audio.play();
+		audio.onended = () => {
+			isPlayingAudio = false;
+		};
+	}
+
+	const currentEvolution = evolutionChainAndImage.find((evo) => evo.name === data.pokemon.name);
+
+	const previousEvolution =
+		currentEvolution &&
+		evolutionChainAndImage[evolutionChainAndImage.indexOf(currentEvolution) - 1];
 </script>
 
-<article class="info">
-	<ul class="type">
-		{#each data.pokemon.pokemonType as type}
-			<li id="pokemonType">
-				<img src={typeWithColor(type.type.name).icon} alt={type.type.name} />
-				<p>
-					{toUpperCase(type.type.name)}
-				</p>
-			</li>
-		{/each}
-	</ul>
-	<h3>{toUpperCase(englishFlavorText)}</h3>
-
-	<AbilityDetails {data} />
-</article>
-
-<section
-	id="card"
-	style="background-color: {typeWithColor(data.pokemon.pokemonType[0].type.name).backgroundColor}"
->
-	<div class="name">
-		<!-- <img src="" alt="" id="previousEvolution" /> -->
-		<span>{toUpperCase(data.pokemon.name)}</span>
-		<div>
+<div id="pokemonInfoCard">
+	<article class="info">
+		<ul class="type">
 			{#each data.pokemon.pokemonType as type}
-				<img src={typeWithColor(type.type.name).icon} alt={type.type.name} />
+				<li id="pokemonType">
+					<img src={typeWithColor(type.type.name).icon} alt={type.type.name} />
+					<p>
+						{toUpperCase(type.type.name)}
+					</p>
+				</li>
 			{/each}
-		</div>
-	</div>
-	<img id="picture" src={imgAndAlt.src} alt={imgAndAlt.alt} />
+		</ul>
+		<h3>{toUpperCase(englishFlavorText)}</h3>
 
-	<div>
-		<div id="cardPokemonStats">
-			<span>NO.{data.pokemon.id}</span>
-			<span>
-				{typeFormatter(data.pokemon.pokemonType)} Pokemon.
-			</span>
-			<span>{decimetreToMeter(data.pokemon.height)}M,</span>
-			<span>{hectogramToKg(data.pokemon.weight)}Kg</span>
-		</div>
-	</div>
+		<AbilityDetails {data} />
+	</article>
 
-	<PokemonStats {data} />
-</section>
+	<section
+		id="card"
+		style="background-color: {typeWithColor(data.pokemon.pokemonType[0].type.name).backgroundColor}"
+	>
+		<div class="name">
+			{#if previousEvolution}
+				<img src={previousEvolution.image} alt="" id="previousEvolution" />
+			{/if}
+			<span>{toUpperCase(data.pokemon.name)}</span>
+			<div>
+				<button disabled={isPlayingAudio} onclick={playPokemonCry}> Play latest cry! </button>
+			</div>
+			<div>
+				{#each data.pokemon.pokemonType as type}
+					<img src={typeWithColor(type.type.name).icon} alt={type.type.name} />
+				{/each}
+			</div>
+		</div>
+		<img id="picture" src={imgAndAlt.src} alt={imgAndAlt.alt} />
+
+		<div>
+			<div id="cardPokemonStats">
+				<span>NO.{data.pokemon.id}</span>
+				<span>
+					{typeFormatter(data.pokemon.pokemonType)} Pokemon.
+				</span>
+				<span>{decimetreToMeter(data.pokemon.height)}M,</span>
+				<span>{hectogramToKg(data.pokemon.weight)}Kg</span>
+			</div>
+		</div>
+
+		<PokemonStats {data} />
+	</section>
+</div>
 
 <style>
 	.name {
@@ -119,8 +148,6 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-
-		max-height: max-content;
 	}
 
 	#card #picture {
@@ -134,23 +161,20 @@
 
 		/* background: linear-gradient(to bottom, #e07474, #72716e, #4e4d4d, #e07474, #4e4d4d); */
 		background-color: white;
+		width: 100%;
+		height: auto;
 	}
 
-	img {
-		width: 350px;
-		height: 350px;
-	}
-
-	/* #card #previousEvolution {
+	#card #previousEvolution {
 		width: 60px;
 		height: 60px;
 		position: absolute;
-		border: 2px solid red;
-		background-color: red;
+		border: 4px solid rgb(0, 0, 0);
+		background-color: rgb(255, 255, 255);
 		border-radius: 70px;
 		left: 0px;
 		top: 50px;
-	} */
+	}
 
 	.type {
 		display: flex;
@@ -176,5 +200,16 @@
 	#pokemonType img {
 		width: 32px;
 		height: 32px;
+	}
+
+	#pokemonInfoCard {
+		display: flex;
+	}
+
+	@media screen and (max-width: 1300px) {
+		#pokemonInfoCard {
+			flex-direction: column;
+			align-items: center;
+		}
 	}
 </style>

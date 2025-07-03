@@ -1,15 +1,15 @@
 <script lang="ts">
+	import type { Pokemon } from '$lib/types';
 	import { onMount } from 'svelte';
-	import type { Pokemons } from '../../routes/+page.server';
 
 	let { pokemonDataSet } = $props();
 
 	onMount(() => {
 		const floatingPokemon = document.querySelector('.floatingPokemon');
-		pokemonDataSet.slice(0, 50).map((pokemon: Pokemons) => {
+		pokemonDataSet.slice(0, 50).map((pokemon: Pokemon) => {
 			const img = document.createElement('img');
 			img.ariaHidden = 'true';
-			img.src = pokemon.normalImage;
+			img.src = pokemon.artwork.front_default;
 			img.classList.add('floating-pokemon');
 			img.style.position = 'absolute';
 			img.style.top = `${Math.random() * 100}vh`;

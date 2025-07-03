@@ -9,6 +9,26 @@
 	let page = $state(1);
 	let pageSize = 18;
 	let pageCount = $state(Math.ceil(data.pokemonDataSet.length / pageSize));
+
+	let animateList = false;
+	$effect(() => {
+		requestAnimationFrame(() => {
+			animateList = true;
+		});
+	});
+
+	// Function to filter the pageCount based on the search value
+	function filterPageCount() {
+		const filteredData = filtered(val, data.pokemonDataSet);
+		pageCount = Math.ceil(filteredData.length / pageSize);
+	}
+
+	$effect(() => {
+		filterPageCount();
+		if (page > pageCount) {
+			page = 1; // Reset to first page if current page exceeds new page count
+		}
+	});
 </script>
 
 <!-- <FloatingPokemon pokemonDataSet={data.pokemonDataSet} /> -->
@@ -27,8 +47,8 @@
 		<PaginationBox bind:page bind:pageCount />
 		<div class="pokemon-list">
 			<ul>
-				{#each filtered(val, data.pokemonDataSet).slice((page - 1) * pageSize, page * pageSize) as pokemon}
-					<li>
+				{#each filtered(val, data.pokemonDataSet).slice((page - 1) * pageSize, page * pageSize) as pokemon (pokemon.name)}
+					<li class="pop-animate">
 						<a href={`/pokemon/${pokemon.name}`}>
 							<img src={pokemon.normalImage} alt={pokemon.name} />
 							<span>{toUpperCase(pokemon.name)}</span>
@@ -133,5 +153,23 @@
 		100% {
 			transform: translateY(0);
 		}
+	}
+
+	@keyframes pop {
+		0% {
+			transform: scale(0.5);
+			opacity: 0.2;
+		}
+		50% {
+			transform: scale(1.1);
+			opacity: 1;
+		}
+		100% {
+			transform: scale(1);
+			opacity: 1;
+		}
+	}
+	.pop-animate {
+		animation: pop 0.3s;
 	}
 </style>

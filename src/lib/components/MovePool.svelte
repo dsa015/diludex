@@ -1,6 +1,6 @@
 <script lang="ts">
+	import type { Move } from '$lib/types';
 	import { toUpperCase, typeWithColor } from '$lib/utils';
-	import type { Move } from '../../routes/pokemon/[name]/+page.server';
 
 	let { moves }: { moves: Move[] } = $props();
 </script>
@@ -41,10 +41,14 @@
 </table>
 
 <style>
+	h2 {
+		font-size: 48px;
+	}
 	table {
 		background-color: white;
 		margin-bottom: 2rem;
 		border-radius: 8px; /* Optional: Rounds the corners of the table */
+		max-width: 1300px;
 	}
 
 	thead {

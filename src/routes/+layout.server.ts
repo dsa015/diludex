@@ -1,11 +1,5 @@
+import type { PokemonList } from '$lib/types';
 import type { LayoutServerLoad } from './$types';
-
-export type PokemonList = {
-	name: string;
-	image: string;
-	normalImage: string;
-	pokemonUrl: string;
-};
 
 export const load: LayoutServerLoad = async () => {
 	const res = await fetch('https://bff-diludex.dilu.dev/api/v1/pokemon');

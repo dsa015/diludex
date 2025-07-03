@@ -1,6 +1,6 @@
-import type { Pokemon } from '../routes/+page.server';
 import { images } from './images';
 import { pokemonTypeColor } from './pokemonTypeColor';
+import type { PokemonList } from './types';
 
 export const toUpperCase = (str: string) => {
 	if (str.includes('-	')) {
@@ -12,7 +12,7 @@ export const toUpperCase = (str: string) => {
 	return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-export const filtered = (val: string, subset: Pokemon[]) => {
+export const filtered = (val: string, subset: PokemonList[]) => {
 	const filtered = subset.filter((result) => {
 		return result.name.toLowerCase().includes(val.toLowerCase());
 	});
