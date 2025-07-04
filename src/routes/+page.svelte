@@ -37,7 +37,7 @@
 	<header>
 		<h1>DiluDex</h1>
 		<div></div>
-		<input type="text" placeholder="Search..." bind:value={val} />
+		<input type="text" placeholder="Search pokemon..." bind:value={val} />
 		{#if filtered(val, data.pokemonDataSet).length === 0}
 			<p>Pokémon not found ...</p>
 		{/if}

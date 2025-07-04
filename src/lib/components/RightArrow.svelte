@@ -8,6 +8,7 @@
 		else page++;
 	}}
 	aria-label="Next page"
+	disabled={pageCount <= 1}
 >
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
@@ -27,5 +28,14 @@
 		clip-path: var(--polygon-border);
 		border: 6px solid rgb(88, 89, 88);
 		z-index: 1;
+	}
+
+	button:hover {
+		cursor: pointer;
+	}
+
+	button:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
 	}
 </style>
