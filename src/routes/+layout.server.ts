@@ -8,9 +8,9 @@ export const load: LayoutServerLoad = async () => {
 		throw new Error('Failed to fetch Pokémon data');
 	}
 
-	const data = (await res.json()) as PokemonList[];
+	const data = (await res.json()) as { data: PokemonList[] };
 
 	return {
-		pokemonDataSet: data
+		pokemonDataSet: data.data
 	};
 };

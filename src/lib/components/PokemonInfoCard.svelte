@@ -31,6 +31,7 @@
 	};
 
 	let isPlayingAudio = $state(false);
+
 	function playPokemonCry() {
 		if (isPlayingAudio) return;
 		isPlayingAudio = true;
@@ -71,7 +72,11 @@
 	>
 		<div class="name">
 			{#if previousEvolution}
-				<img src={previousEvolution.image} alt="" id="previousEvolution" />
+				<img
+					src={previousEvolution.image}
+					alt="previous evolution of pokemon"
+					id="previousEvolution"
+				/>
 			{/if}
 			<span>{toUpperCase(data.pokemon.name)}</span>
 			<div>
@@ -131,7 +136,6 @@
 	}
 
 	.info {
-		max-width: 700px;
 		width: 100%;
 	}
 	h3 {

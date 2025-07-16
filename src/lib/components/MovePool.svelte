@@ -47,8 +47,7 @@
 	table {
 		background-color: white;
 		margin-bottom: 2rem;
-		border-radius: 8px; /* Optional: Rounds the corners of the table */
-		max-width: 1300px;
+		border-radius: 8px;
 	}
 
 	thead {

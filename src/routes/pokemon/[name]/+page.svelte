@@ -7,15 +7,15 @@
 
 	let { data }: PageProps = $props();
 
-	const pokemonName = toUpperCase(data.pokemon.forms[0].name);
-	const imgSrc = data.pokemon.artwork.other['official-artwork'].front_default;
+	const pokemonName = toUpperCase(data.pokemonDetail.pokemon.forms[0].name);
+	const imgSrc = data.pokemonDetail.pokemon.artwork.other['official-artwork'].front_default;
 	const imgAndAlt: ImgAndAlt = {
 		src: imgSrc,
-		alt: data.pokemon.name
+		alt: data.pokemonDetail.pokemon.name
 	};
 
 	const filteredPokemonByEvolution = data.pokemonDataSet.filter((pokemon) =>
-		data.evolution_chain.some((evo) => evo.name === pokemon.name)
+		data.pokemonDetail.evolution_chain.some((evo) => evo.name === pokemon.name)
 	);
 
 	const evolutionChainAndImage: EvoChainAndImage[] = filteredPokemonByEvolution.map((pokemon) => {
@@ -33,18 +33,22 @@
 
 	<section>
 		<div>
-			<PokemonInfoCard {data} {imgAndAlt} {evolutionChainAndImage} />
+			<PokemonInfoCard data={data.pokemonDetail} {imgAndAlt} {evolutionChainAndImage} />
 		</div>
 		<h1>Evolution chain</h1>
 
 		<div id="container">
 			<EvolutionChain {evolutionChainAndImage} />
 		</div>
-		<MovePool moves={data.moves} />
+		<MovePool moves={data.pokemonDetail.moves} />
 	</section>
 </main>
 
 <style>
+	main {
+		max-width: 1300px;
+	}
+
 	h1 {
 		margin-bottom: 0;
 		font-size: 3rem;
@@ -62,11 +66,9 @@
 		justify-content: space-between;
 	}
 	#container {
-		max-width: 1261px;
 		display: flex;
 		gap: 2rem;
 		align-items: center;
-		justify-self: center;
 		padding: 2rem;
 	}
 
