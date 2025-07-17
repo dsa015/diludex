@@ -208,6 +208,7 @@
 
 	#pokemonInfoCard {
 		display: flex;
+		gap: 5rem;
 	}
 
 	@media screen and (max-width: 1300px) {

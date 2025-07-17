@@ -109,6 +109,24 @@ export type Species = {
 	evolution_chain: {
 		url: string;
 	};
+	base_happiness: number;
+	shape: {
+		name: string;
+		url: string;
+	};
+	has_gender_differences: boolean;
+	is_baby: boolean;
+	is_legendary: boolean;
+	is_mythical: boolean;
+	varieties: Varieties[];
+};
+
+type Varieties = {
+	is_default: boolean;
+	pokemon: {
+		name: string;
+		url: string;
+	};
 };
 
 export type PokemonDetails = {

@@ -1,18 +1,21 @@
 <script lang="ts">
 	import { PokemonInfoCard, MovePool } from '$lib';
-	import { toUpperCase } from '$lib/utils.js';
 	import type { PageProps } from './$types';
 	import EvolutionChain from '$lib/components/EvolutionChain.svelte';
 	import type { EvoChainAndImage, ImgAndAlt } from '$lib/types';
+	import { toUpperCase } from '$lib/utils';
 
 	let { data }: PageProps = $props();
 
-	const pokemonName = toUpperCase(data.pokemonDetail.pokemon.forms[0].name);
-	const imgSrc = data.pokemonDetail.pokemon.artwork.other['official-artwork'].front_default;
-	const imgAndAlt: ImgAndAlt = {
+	const pokemonName = $derived(toUpperCase(data.pokemonDetail.pokemon.name));
+
+	const imgSrc = $derived(
+		data.pokemonDetail.pokemon.artwork.other['official-artwork'].front_default
+	);
+	const imgAndAlt: ImgAndAlt = $derived({
 		src: imgSrc,
 		alt: data.pokemonDetail.pokemon.name
-	};
+	});
 
 	const filteredPokemonByEvolution = data.pokemonDataSet.filter((pokemon) =>
 		data.pokemonDetail.evolution_chain.some((evo) => evo.name === pokemon.name)
@@ -30,11 +33,22 @@
 	<a href="/">Diludex</a>
 
 	<h1>{pokemonName}</h1>
-
 	<section>
 		<div>
 			<PokemonInfoCard data={data.pokemonDetail} {imgAndAlt} {evolutionChainAndImage} />
 		</div>
+
+		<h1>Forms</h1>
+		<ul>
+			{#each data.pokemonDetail.pokemon_species.varieties as form}
+				<li>
+					<a href={`/pokemon/${form.pokemon.name}`}>
+						{form.pokemon.name}
+					</a>
+				</li>
+			{/each}
+		</ul>
+
 		<h1>Evolution chain</h1>
 
 		<div id="container">
