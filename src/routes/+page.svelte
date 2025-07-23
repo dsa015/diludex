@@ -11,7 +11,6 @@
 	let pageSize = 18;
 	let pageCount = $state(Math.ceil(data.pokemonDataSet.length / pageSize));
 
-	// Function to filter the pageCount based on the search value
 	function filterPageCount() {
 		const filteredData = filtered(val, data.pokemonDataSet);
 		pageCount = Math.ceil(filteredData.length / pageSize);
@@ -20,7 +19,7 @@
 	$effect(() => {
 		filterPageCount();
 		if (page > pageCount) {
-			page = 1; // Reset to first page if current page exceeds new page count
+			page = 1;
 		}
 	});
 </script>

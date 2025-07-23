@@ -38,22 +38,27 @@
 			<PokemonInfoCard data={data.pokemonDetail} {imgAndAlt} {evolutionChainAndImage} />
 		</div>
 
-		<h1>Forms</h1>
-		<ul>
-			{#each data.pokemonDetail.pokemon_species.varieties as form}
-				<li>
-					<a href={`/pokemon/${form.pokemon.name}`}>
-						{form.pokemon.name}
-					</a>
-				</li>
-			{/each}
-		</ul>
+		{#if data.pokemonDetail.pokemon_species.varieties.length > 1}
+			<h1>Forms</h1>
+			<ul>
+				{#each data.pokemonDetail.pokemon_species.varieties as form}
+					<li>
+						<a href={`/pokemon/${form.pokemon.name}`}>
+							{form.pokemon.name}
+						</a>
+					</li>
+				{/each}
+			</ul>
+		{/if}
 
+		<!-- gjør at den viser heller no img avaialbe elns hvis 1 length -->
+		<!-- {#if data.pokemonDetail.evolution_chain.length > 1} -->
 		<h1>Evolution chain</h1>
 
 		<div id="container">
 			<EvolutionChain {evolutionChainAndImage} />
 		</div>
+		<!-- {/if} -->
 		<MovePool moves={data.pokemonDetail.moves} />
 	</section>
 </main>
@@ -69,7 +74,7 @@
 	}
 
 	a {
-		font-size: 3vw;
+		font-size: x-large;
 		text-decoration: none;
 		color: black;
 		font-weight: 700;
