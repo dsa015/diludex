@@ -135,7 +135,7 @@ export type PokemonDetails = {
 	evolution_chain: {
 		name: string;
 	}[];
-	moves: Move[];
+	moves: string[];
 };
 
 export type PokemonList = {
@@ -143,4 +143,13 @@ export type PokemonList = {
 	image: string;
 	normalImage: string;
 	pokemonUrl: string;
+};
+
+export type MoveResponse = {
+	data: Move[];
+	total_records: number | null;
+	total_pages: number | null;
+	current_page: number | null;
+	next_page: number | null;
+	prev_page: number | null;
 };

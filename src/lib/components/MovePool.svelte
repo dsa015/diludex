@@ -1,8 +1,9 @@
 <script lang="ts">
 	import type { Move } from '$lib/types';
 	import { toUpperCase, typeWithColor } from '$lib/utils';
+	import Loading from './Loading.svelte';
 
-	let { moves }: { moves: Move[] } = $props();
+	let { moves, isLoading }: { moves: Move[]; isLoading?: boolean } = $props();
 </script>
 
 <h2>Learnable moves</h2>
@@ -21,6 +22,9 @@
 		</tr>
 	</thead>
 	<tbody>
+		{#if isLoading}
+			<Loading {isLoading} />
+		{/if}
 		{#each moves as move}
 			<tr>
 				<!-- <td>{move.level}</td> -->
@@ -48,6 +52,7 @@
 		background-color: white;
 		margin-bottom: 2rem;
 		border-radius: 8px;
+		height: 450px;
 	}
 
 	thead {
@@ -56,7 +61,7 @@
 
 	tbody {
 		display: block;
-		max-height: 400px;
+		height: 100%;
 		overflow-y: auto;
 	}
 

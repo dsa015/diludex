@@ -2,10 +2,16 @@
 	import { PokemonInfoCard, MovePool } from '$lib';
 	import type { PageProps } from './$types';
 	import EvolutionChain from '$lib/components/EvolutionChain.svelte';
-	import type { EvoChainAndImage, ImgAndAlt } from '$lib/types';
+	import type { EvoChainAndImage, ImgAndAlt, Move } from '$lib/types';
 	import { toUpperCase } from '$lib/utils';
+	import { fetchPokemonMoves } from './moves';
+	import { onMount } from 'svelte';
+	import Loading from '$lib/components/Loading.svelte';
+	import PokeBall from '$lib/components/PokeBall.svelte';
 
 	let { data }: PageProps = $props();
+
+	let isLoading = $state(false);
 
 	const pokemonName = $derived(toUpperCase(data.pokemonDetail.pokemon.name));
 
@@ -17,21 +23,26 @@
 		alt: data.pokemonDetail.pokemon.name
 	});
 
-	const filteredPokemonByEvolution = data.pokemonDataSet.filter((pokemon) =>
-		data.pokemonDetail.evolution_chain.some((evo) => evo.name === pokemon.name)
-	);
+	let moveState = $state<Move[]>([]);
 
-	const evolutionChainAndImage: EvoChainAndImage[] = filteredPokemonByEvolution.map((pokemon) => {
+	const evolutionChainAndImage = data.pokemonDetail.evolution_chain.map((evo) => {
+		const found = data.pokemonDataSet.find((pokemon) => pokemon.name === evo.name);
 		return {
-			name: pokemon.name,
-			image: pokemon.normalImage
-		};
+			name: evo.name,
+			image: found?.normalImage
+		} as EvoChainAndImage;
+	});
+
+	onMount(async () => {
+		isLoading = true;
+		const { moves } = await fetchPokemonMoves(pokemonName);
+
+		moveState = moves;
+		isLoading = false;
 	});
 </script>
 
 <main>
-	<a href="/">Diludex</a>
-
 	<h1>{pokemonName}</h1>
 	<section>
 		<div>
@@ -51,15 +62,17 @@
 			</ul>
 		{/if}
 
-		<!-- gjør at den viser heller no img avaialbe elns hvis 1 length -->
-		<!-- {#if data.pokemonDetail.evolution_chain.length > 1} -->
 		<h1>Evolution chain</h1>
 
-		<div id="container">
-			<EvolutionChain {evolutionChainAndImage} />
-		</div>
-		<!-- {/if} -->
-		<MovePool moves={data.pokemonDetail.moves} />
+		{#if evolutionChainAndImage.length > 1}
+			<div id="container">
+				<EvolutionChain {evolutionChainAndImage} />
+			</div>
+		{:else}
+			<p>This Pokémon does not evolve.</p>
+		{/if}
+
+		<MovePool {isLoading} moves={moveState} />
 	</section>
 </main>
 
@@ -95,7 +108,7 @@
 		section {
 			display: flex;
 			flex-direction: column;
-			align-items: center;
+			/* align-items: center; */
 		}
 		#container {
 			flex-direction: column;

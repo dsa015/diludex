@@ -19,7 +19,7 @@ export const pokemonTypeColor = {
 	fairy: '#D685AD',
 	stellar: '#40B5A5',
 	unknown: '#9DC1B7'
-};
+} as const;
 
 const pokemonBackgroundColor = {
 	normal: {
